@@ -1,0 +1,15 @@
+---
+
+- name: Add authorized keys
+  authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ lookup('file', 'files/'+ item + '.key.pub') }}"
+  loop:
+    - msuchy
+
+- name: Upgrade all packages
+  dnf:
+    name: "*"
+    state: latest
+
+

@@ -1,0 +1,2 @@
+[dev]
+ec2-63-34-9-164.eu-west-1.compute.amazonaws.com ansible_user=centos

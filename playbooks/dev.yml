@@ -1,0 +1,6 @@
+---
+- name: set up dev server
+  hosts: dev
+
+  roles:
+  - base
