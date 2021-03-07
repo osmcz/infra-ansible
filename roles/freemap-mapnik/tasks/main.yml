@@ -11,4 +11,23 @@
       - python3-gdal
       - gdal
       - nodejs
+      - git
+      - libpng-devel
     state: latest
+
+- name: Clone freemap-mapnik.git
+  git:
+    repo: https://github.com/FreemapSlovakia/freemap-mapnik.git
+    dest: /mnt/freemap-mapnik.git
+    archive: /tmp/ansible-examples.zip
+
+#- name: Install node.js packages
+#  npm:
+#    path: /mnt/freemap-mapnik.git
+#    state: latest
+
+# ci instead of i because of https://stackoverflow.com/a/50868741/3489429
+- name: Install node.js packages
+  command:
+    cmd: "npm ci -f"
+    chdir: /mnt/freemap-mapnik.git 

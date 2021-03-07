@@ -1,28 +1,35 @@
 ---
 
-# taken from https://github.com/kinow/nz-osm-server/tree/master/infra/roles/imposm
-#
-- name: Download imposm3 (go binary) and unarchive it into /opt/imposm
-  get_url:
-    url: https://github.com/omniscale/imposm3/releases/download/v0.11.1/imposm-0.11.1-linux-x86-64.tar.gz
-    dest: /opt/imposm3.tar.gz
-  tags:
-    - imposm
+- name: Check if /opt/imposm3 file exists
+  stat: 
+    path: /opt/imposm3
+  register: imposm3_file
 
-- name: Unarchive imposm3
-  unarchive:
-    src: /opt/imposm3.tar.gz
-    dest: /opt/
-    remote_src: yes
-    list_files: yes
-  register: archive_contents
-  tags:
-    - imposm
-
-- name: Move imposm3 directory
-  shell: mv /opt/{{ archive_contents.files[0] }} /opt/imposm3
-  args:
-    creates: /opt/imposm3
+- name: Download and install imposm3
+  block:
+    # taken from https://github.com/kinow/nz-osm-server/tree/master/infra/roles/imposm
+    - name: Download imposm3 (go binary) and unarchive it into /opt/imposm
+      get_url:
+        url: https://github.com/omniscale/imposm3/releases/download/v0.11.1/imposm-0.11.1-linux-x86-64.tar.gz
+        dest: /opt/imposm3.tar.gz
+      tags:
+        - imposm
+    
+    - name: Unarchive imposm3
+      unarchive:
+        src: /opt/imposm3.tar.gz
+        dest: /opt/
+        remote_src: yes
+        list_files: yes
+      register: archive_contents
+      tags:
+        - imposm
+    
+    - name: Move imposm3 directory
+      shell: mv /opt/{{ archive_contents.files[0] }} /opt/imposm3
+      args:
+        creates: /opt/imposm3
+  when: imposm3_file.stat.exists == False
 
 - name: Create imposm database
   become_user: postgres
