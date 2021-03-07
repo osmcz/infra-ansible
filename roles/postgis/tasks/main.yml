@@ -1,0 +1,60 @@
+---
+
+# https://computingforgeeks.com/how-to-install-postgis-on-centos-8-linux/
+
+- name: Check if pgdg-redhat-repo is installed
+  command:
+    cmd: "rpm -q pgdg-redhat-repo"
+    warn: false                                                                                                                                                                              
+  register: rpm_check
+  changed_when: "'is not installed' in rpm_check.stdout"
+
+- name: Enable pgdg-redhat-repo
+  dnf:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    disable_gpg_check: yes
+    state: present
+  when: rpm_check.stdout.find('is not installed') != -1
+
+- name: Disable module postgresql
+  command:
+    cmd: "dnf -qy module disable postgresql"
+    warn: false
+
+- name: Install postgis
+  dnf:
+    name:
+      - postgresql12
+      - postgresql12-server
+      - postgresql12-contrib
+      - postgis25_12
+      - python3-psycopg2
+    state: latest
+
+- name: Check if database is already initialized
+  stat:
+    path: '/var/lib/pgsql/12/data/PG_VERSION'
+  register: init_status
+
+- name: Initialize the master database
+  shell: "/usr/pgsql-12/bin/postgresql-12-setup initdb"
+  when: init_status.stat.exists == False
+
+- name: Start postgresql server
+  service: name=postgresql-12 state=started enabled=yes
+
+- name: ensure template_postgis database exists
+  become_user: postgres
+  postgresql_db: name=template_postgis state=present
+  register: createdb_template_postgis
+
+- name: make template_postgis a template
+  become_user: postgres
+  command: psql -d template_postgis -c "UPDATE pg_database SET datistemplate=true WHERE datname='template_postgis';"
+  when: createdb_template_postgis.changed
+
+- name: enable postgis extension 
+  become_user: postgres
+  command: psql -d template_postgis -c "CREATE EXTENSION postgis;"
+  when: createdb_template_postgis.changed
+

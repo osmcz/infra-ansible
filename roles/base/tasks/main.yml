@@ -8,15 +8,27 @@
     - msuchy
     - mfabik
 
+- name: Check if epel-release is installed
+  command:
+    argv:
+      - rpm 
+      - -q 
+      - epel-release
+    warn: false
+  register: rpm_check
+  changed_when: "'is not installed' in rpm_check.stdout"
+
 - name: Enable EPEL
   dnf:
     name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"
     disable_gpg_check: yes
     state: present
+  when: rpm_check.stdout.find('is not installed') != -1
 
-- name: enable powertools
-  command: dnf config-manager --set-enabled powertools
-  warn: false
+- name: Enable powertools
+  command:
+    cmd: "dnf config-manager --set-enabled powertools"
+    warn: false
 
 - name: Upgrade all packages
   dnf:

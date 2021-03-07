@@ -1,0 +1,14 @@
+---
+
+- name: enable nodejs 12 module stream
+  command:
+    cmd: "dnf -y module enable nodejs:12"
+    warn: false
+
+- name: install packages required for freemap-mapnik
+  dnf:
+    name:
+      - python3-gdal
+      - gdal
+      - nodejs
+    state: latest

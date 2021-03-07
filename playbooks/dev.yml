@@ -4,4 +4,6 @@
 
   roles:
   - base
+  - postgis
+  - imposm
   - freemap-mapnik

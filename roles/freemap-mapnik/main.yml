@@ -1,4 +1,0 @@
----
-- name: enable powertools
-  command: dnf config-manager --set-enabled powertools
-  warn: false
