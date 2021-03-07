@@ -14,6 +14,10 @@
     disable_gpg_check: yes
     state: present
 
+- name: enable powertools
+  command: dnf config-manager --set-enabled powertools
+  warn: false
+
 - name: Upgrade all packages
   dnf:
     name: "*"
