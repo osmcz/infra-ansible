@@ -4,6 +4,7 @@
 
   roles:
   - base
+  # https://github.com/FreemapSlovakia/freemap-mapnik/blob/develop/doc/INSTALL.md
   - postgis
   - imposm
   - freemap-mapnik
