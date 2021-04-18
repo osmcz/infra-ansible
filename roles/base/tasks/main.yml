@@ -15,6 +15,7 @@
       - -q 
       - epel-release
     warn: false
+  ignore_errors: True
   register: rpm_check
   changed_when: "'is not installed' in rpm_check.stdout"
 

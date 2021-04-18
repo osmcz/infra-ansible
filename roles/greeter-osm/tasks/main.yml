@@ -1,0 +1,36 @@
+---
+
+- name: install required packages
+  dnf:
+    name:
+      - git
+      - python3
+      - python3-pip
+      - python3-webencodings
+      - python3-html5lib
+      - python3-requests
+    state: latest
+
+- name: install python modules not available as package
+  pip:
+    name:
+      - bs4
+      - mechanize
+
+- name: Clone osm-greeter git repo
+  git:
+    repo: https://github.com/osmcz/greeter-osm.git
+    dest: "{{ greeter_location }}"
+
+- name: Copy production config
+  template:
+    src: greeter-production.conf
+    dest: "{{ greeter_location }}/greeter-production.conf"
+
+- name: Set up cron job
+  cron:
+    name: "Send greeter-osm emails"
+    minute: "0"
+    hour: "6"
+    job: "{{ greeter_location }}/greeter_osm.py --config {{ greeter_location }}/greeter-production.conf"
+

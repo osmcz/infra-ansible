@@ -5,7 +5,8 @@
 - name: Check if pgdg-redhat-repo is installed
   command:
     cmd: "rpm -q pgdg-redhat-repo"
-    warn: false                                                                                                                                                                              
+    warn: false
+  ignore_errors: True
   register: rpm_check
   changed_when: "'is not installed' in rpm_check.stdout"
 

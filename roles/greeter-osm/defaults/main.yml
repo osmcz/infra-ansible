@@ -1,0 +1,7 @@
+---
+# defaults file for greeter-osm
+
+username: login-to-osm
+password: some-secret
+greeter_location: /var/local/greeter-osm
+statusfile: "{{greeter_location}}/statusgreeter"

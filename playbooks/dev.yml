@@ -4,7 +4,10 @@
 
   roles:
   - base
+  - role: greeter-osm
+    username: "osmcz-welcome"
+    password: "{{ osmcz_welcome_password }}"
   # https://github.com/FreemapSlovakia/freemap-mapnik/blob/develop/doc/INSTALL.md
-  - postgis
-  - imposm
-  - freemap-mapnik
+  #- postgis
+  #- imposm
+  #- freemap-mapnik
