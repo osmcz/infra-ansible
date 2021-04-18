@@ -1,0 +1,3 @@
+run as:
+
+LC_ALL=C ansible-playbook --vault-id @prompt   playbooks/dev.yml

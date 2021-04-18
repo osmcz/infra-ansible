@@ -1,0 +1,1 @@
+osmcz_welcome_password: "{{ vault_osmcz_welcome_password }}"
